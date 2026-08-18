@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Témoin · Rencontres avec le passé</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<!--ANALYTICS-->
+<script>
+  window.track = function(nom, data){
+    try { if(window.umami && typeof window.umami.track === 'function'){ data ? window.umami.track(nom, data) : window.umami.track(nom); } }
+    catch(e){}
+  };
+</script>
+
+<script type="module">
+  import { GoogleGenAI, Modality } from 'https://esm.run/@google/genai';
+  window.__genai = { GoogleGenAI, Modality };
+  window.dispatchEvent(new Event('genai-ready'));
+</script>
+
+<style>
+:root{
+  --bg:#07070c; --violet:#8b5cf6; --cyan:#22d3ee; --pink:#e879f9; --or:#fbbf24;
+  --txt:#f4f4f7; --soft:#dcdce9; --muted:#a9a9c2;
+  --glass:rgba(255,255,255,.045); --stroke:rgba(255,255,255,.10); --stroke-hi:rgba(255,255,255,.20);
+  --level:0; --miclevel:0;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:'Inter',system-ui,sans-serif;min-height:100vh;overflow-x:hidden}
+.bg-wrap{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5}
+.blob-1{width:60vw;height:60vw;background:radial-gradient(circle,#6d28d9,transparent 70%);top:-22vw;left:-14vw;animation:drift1 24s ease-in-out infinite}
+.blob-2{width:52vw;height:52vw;background:radial-gradient(circle,#0891b2,transparent 70%);bottom:-20vw;right:-12vw;animation:drift2 30s ease-in-out infinite}
+.blob-3{width:38vw;height:38vw;background:radial-gradient(circle,#b45309,transparent 70%);top:38%;left:52%;opacity:.3;animation:drift3 36s ease-in-out infinite}
+@keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(6vw,5vw)}}
+@keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-7vw,-4vw)}}
+@keyframes drift3{0%,100%{transform:translate(0,0)}50%{transform:translate(-5vw,6vw)}}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.16;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E")}
+.shell{position:relative;z-index:2;max-width:1120px;margin:0 auto;padding:0 20px 56px}
+.glass{background:var(--glass);border:1px solid var(--stroke);backdrop-filter:blur(22px) saturate(140%);-webkit-backdrop-filter:blur(22px) saturate(140%)}
+
+header{display:flex;align-items:center;justify-content:space-between;padding:24px 0 6px;gap:14px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:12px;cursor:pointer}
+.logo-mark{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--violet),var(--or));box-shadow:0 8px 28px -8px rgba(139,92,246,.85)}
+.logo h1{font-family:'Space Grotesk';font-size:19px;font-weight:700;letter-spacing:-.03em;margin:0;line-height:1}
+.logo p{margin:3px 0 0;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.hdr-right{display:flex;align-items:center;gap:10px}
+.ia-tag{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border:1px solid var(--stroke);
+  padding:6px 12px;border-radius:999px;font-weight:600}
+#chrono{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;font-size:12px;font-weight:600;
+  background:rgba(34,211,238,.10);border:1px solid rgba(34,211,238,.35);color:#67e8f9;font-variant-numeric:tabular-nums}
+.dot{width:7px;height:7px;border-radius:50%;background:#22d3ee;box-shadow:0 0 12px #22d3ee;animation:blip 1.6s infinite}
+@keyframes blip{0%,100%{opacity:1}50%{opacity:.25}}
+
+.hero{text-align:center;padding:44px 0 34px}
+.hero .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--muted);border:1px solid var(--stroke);border-radius:999px;padding:7px 15px;margin-bottom:22px;background:var(--glass)}
+.hero h2{font-family:'Space Grotesk';font-size:clamp(32px,5.4vw,52px);line-height:1.03;letter-spacing:-.045em;margin:0 0 16px;font-weight:700}
+.grad{background:linear-gradient(100deg,var(--violet) 5%,var(--or) 95%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.sub{color:var(--soft);font-size:16.5px;max-width:560px;margin:0 auto;line-height:1.7}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:15px}
+.card{border-radius:22px;padding:22px;text-align:left;color:var(--txt);font-family:inherit;cursor:pointer;
+  display:flex;flex-direction:column;gap:13px;transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease}
+.card:hover{transform:translateY(-3px);border-color:rgba(139,92,246,.55);box-shadow:0 22px 48px -22px rgba(139,92,246,.75)}
+.card.off{opacity:.5;cursor:not-allowed}
+.card.off:hover{transform:none;border-color:var(--stroke);box-shadow:none}
+.card .top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.emb{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;
+  background:linear-gradient(135deg,rgba(139,92,246,.4),rgba(251,191,36,.32));border:1px solid var(--stroke-hi);color:#fff}
+.card h3{font-family:'Space Grotesk';font-size:19px;font-weight:600;letter-spacing:-.02em;margin:0 0 5px;line-height:1.25}
+.card .lieu{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--or);font-weight:600;margin:0 0 8px}
+.card p{margin:0;font-size:14.5px;line-height:1.6;color:var(--soft)}
+.badge{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;background:rgba(255,255,255,.07);
+  border:1px solid var(--stroke);color:var(--muted);padding:4px 10px;border-radius:999px;font-weight:600;white-space:nowrap}
+.badge.reco{background:rgba(139,92,246,.18);border-color:rgba(139,92,246,.4);color:#c4b5fd}
+
+.back{background:none;border:0;color:var(--muted);font-family:inherit;font-size:11.5px;font-weight:600;letter-spacing:.13em;
+  text-transform:uppercase;cursor:pointer;display:inline-flex;align-items:center;gap:7px;padding:10px 0;margin-bottom:12px}
+.back:hover{color:var(--txt)}
+.recap{border-radius:22px;padding:20px 22px;margin-bottom:24px;display:flex;align-items:center;gap:18px;position:relative;overflow:hidden}
+.recap::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--violet),var(--or))}
+.recap h2{font-family:'Space Grotesk';font-size:20px;margin:0 0 4px;font-weight:600;letter-spacing:-.02em}
+.recap p{margin:0;font-size:14px;color:var(--muted)}
+.mid{text-align:center;margin:0 0 20px}
+.mid h3{font-family:'Space Grotesk';font-size:23px;margin:0 0 7px;font-weight:600;letter-spacing:-.025em}
+.mid p{margin:0;font-size:14.5px;color:var(--muted)}
+
+/* ---------- écran de séance : pensé pour un vidéoprojecteur ---------- */
+.seance{display:flex;flex-direction:column;align-items:center;padding-top:14px}
+.brief{width:100%;border-radius:22px;padding:20px 24px;margin-bottom:20px;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.brief .emb{width:64px;height:64px}
+.brief h2{font-family:'Space Grotesk';font-size:22px;margin:0 0 4px;font-weight:600;letter-spacing:-.025em}
+.brief .lieu{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--or);font-weight:600;margin:0 0 6px}
+.brief p.ctx{margin:0;font-size:14.5px;color:var(--soft);line-height:1.6;flex:1;min-width:240px}
+.brief .lvl{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;background:rgba(255,255,255,.07);
+  border:1px solid var(--stroke);color:var(--soft);padding:5px 11px;border-radius:999px;font-weight:600}
+
+.scene{width:100%;border-radius:26px;padding:30px 32px 26px;margin-bottom:18px;display:flex;flex-direction:column;align-items:center;min-height:330px}
+.orb-stage{position:relative;width:150px;height:150px;display:grid;place-items:center;margin-bottom:16px;flex-shrink:0}
+.ring{position:absolute;border-radius:50%;border:1px solid rgba(251,191,36,.22)}
+.r1{width:100%;height:100%;animation:breathe 4.5s ease-in-out infinite}
+.r2{width:78%;height:78%;border-color:rgba(139,92,246,.2);animation:breathe 4.5s ease-in-out infinite .7s}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:.55}50%{transform:scale(1.07);opacity:.2}}
+.avatar{width:104px;height:104px;border-radius:50%;display:grid;place-items:center;color:#fff;
+  background:linear-gradient(135deg,rgba(139,92,246,.55),rgba(251,191,36,.45));border:2px solid rgba(255,255,255,.2);
+  box-shadow:0 0 calc(24px + var(--level)*70px) rgba(251,191,36,.45);
+  transform:scale(calc(1 + var(--level)*.08));transition:transform .07s linear,box-shadow .1s linear}
+
+/* LE sous-titre : c'est l'élément principal, lisible du fond de la classe */
+#soustitre{font-size:clamp(22px,2.9vw,38px);line-height:1.4;text-align:center;font-weight:500;letter-spacing:-.02em;
+  max-width:900px;min-height:2.8em;color:#fff;margin:0}
+#soustitre.attente{color:var(--muted);font-weight:400;font-size:clamp(16px,1.7vw,21px)}
+#question-vive{font-size:clamp(14px,1.5vw,18px);color:#c4b5fd;text-align:center;max-width:820px;margin:14px 0 0;
+  min-height:1.5em;font-style:italic}
+
+/* ---------- barre de commande de l'enseignant ---------- */
+.commandes{width:100%;display:flex;flex-direction:column;align-items:center;gap:14px;margin-bottom:16px}
+.modes{display:inline-flex;background:rgba(255,255,255,.05);border:1px solid var(--stroke);border-radius:999px;padding:4px;gap:3px}
+.mode{background:none;border:0;color:var(--muted);font-family:inherit;font-size:12.5px;font-weight:600;
+  padding:9px 17px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:.15s;white-space:nowrap}
+.mode:hover{color:var(--soft)}
+.mode.actif{background:linear-gradient(100deg,rgba(139,92,246,.35),rgba(251,191,36,.28));color:#fff;border:1px solid rgba(139,92,246,.4)}
+#btn-parler{width:100%;max-width:560px;border:0;border-radius:22px;padding:24px;cursor:pointer;
+  font-family:'Space Grotesk';font-size:17px;font-weight:600;letter-spacing:.01em;color:#0a0a12;
+  background:linear-gradient(100deg,var(--violet),var(--or));box-shadow:0 18px 46px -16px rgba(139,92,246,.9);
+  display:flex;align-items:center;justify-content:center;gap:12px;transition:transform .1s ease,box-shadow .1s ease;
+  user-select:none;-webkit-user-select:none;touch-action:none}
+#btn-parler:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+#btn-parler.ouvert{background:linear-gradient(100deg,#22d3ee,#4ade80);
+  box-shadow:0 0 0 calc(6px + var(--miclevel)*26px) rgba(34,211,238,.18),0 18px 46px -16px rgba(34,211,238,.9);transform:scale(1.01)}
+.aide{font-size:13px;color:var(--muted);text-align:center;max-width:560px;line-height:1.6}
+.aide kbd{background:rgba(255,255,255,.09);border:1px solid var(--stroke-hi);border-radius:6px;padding:2px 7px;font-family:inherit;font-size:12px}
+.saisie{width:100%;max-width:560px;display:flex;gap:9px}
+.saisie input{flex:1;background:rgba(255,255,255,.05);border:1px solid var(--stroke);border-radius:15px;padding:14px 16px;
+  color:var(--txt);font-family:inherit;font-size:15px}
+.saisie input::placeholder{color:var(--muted)}
+.saisie input:focus{outline:none;border-color:rgba(139,92,246,.6)}
+.saisie button{background:rgba(255,255,255,.07);border:1px solid var(--stroke);color:var(--txt);border-radius:15px;
+  padding:0 18px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.saisie button:hover{background:rgba(255,255,255,.13)}
+.barre{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.mini{background:rgba(255,255,255,.06);border:1px solid var(--stroke);color:var(--soft);border-radius:999px;
+  padding:11px 18px;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.mini:hover{background:rgba(255,255,255,.12);color:#fff}
+.mini.fin{background:rgba(244,63,94,.13);border-color:rgba(244,63,94,.4);color:#fda4af}
+
+#journal{width:100%;border-radius:22px;overflow:hidden;margin-top:6px}
+#journal .hd{padding:15px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;
+  font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);font-weight:600}
+#journal-corps{padding:0 20px 18px;display:flex;flex-direction:column;gap:9px;max-height:260px;overflow-y:auto}
+.tour{font-size:14.5px;line-height:1.6;padding:10px 14px;border-radius:13px}
+.t-eux{background:rgba(255,255,255,.05);border:1px solid var(--stroke)}
+.t-nous{background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.3)}
+.tour b{display:block;font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:#b9b9d0;margin-bottom:4px;font-weight:600}
+
+#problem-box{width:100%;border-radius:20px;padding:19px;margin-bottom:18px;background:rgba(244,63,94,.09);border:1px solid rgba(244,63,94,.34)}
+#problem-title{margin:0 0 9px;font-family:'Space Grotesk';font-size:16px;color:#fecdd3;font-weight:600}
+#problem-body{font-size:14px;line-height:1.7;color:#fde2e6}
+#problem-body p{margin:0 0 8px}
+#problem-actions button{margin-top:11px;margin-right:8px;background:rgba(244,63,94,.24);border:1px solid rgba(244,63,94,.5);
+  color:#fff;border-radius:12px;padding:10px 17px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer}
+#problem-detail{font-family:ui-monospace,monospace;font-size:10px;color:rgba(253,164,175,.42);margin-top:11px;word-break:break-all}
+
+#inapp{border-radius:18px;padding:16px 18px;margin-bottom:18px;background:rgba(251,191,36,.09);
+  border:1px solid rgba(251,191,36,.34);font-size:14px;line-height:1.7;color:#fde68a}
+#inapp b{color:#fef3c7;font-weight:600}
+
+/* ---------- fiche de séance ---------- */
+#modal{position:fixed;inset:0;z-index:120;background:rgba(4,4,9,.85);backdrop-filter:blur(16px);
+  display:none;align-items:center;justify-content:center;padding:18px}
+#modal.on{display:flex}
+.sheet{width:100%;max-width:640px;max-height:92vh;overflow-y:auto;border-radius:28px;
+  background:rgba(15,15,24,.96);border:1px solid var(--stroke-hi);box-shadow:0 40px 100px -24px rgba(0,0,0,.95)}
+.sheet-head{padding:30px 30px 24px;text-align:center;border-bottom:1px solid var(--stroke);position:relative;overflow:hidden}
+.sheet-head::after{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--violet),var(--or))}
+.sheet-head h3{font-family:'Space Grotesk';font-size:24px;margin:0 0 8px;letter-spacing:-.03em;font-weight:600}
+.sheet-head p{margin:0;color:var(--soft);font-size:15px;line-height:1.7}
+#fiche{padding:24px 30px 30px;display:flex;flex-direction:column;gap:16px}
+.sec{border-radius:19px;padding:19px 21px;background:rgba(255,255,255,.035);border:1px solid var(--stroke)}
+.sec h4{margin:0 0 12px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--or);font-weight:600;display:flex;align-items:center;gap:8px}
+.sec p{margin:0;font-size:15px;line-height:1.75;color:var(--soft)}
+.sec ul{margin:0;padding-left:20px;font-size:15px;line-height:1.85;color:var(--soft)}
+.sec.alerte{background:rgba(251,191,36,.09);border-color:rgba(251,191,36,.3)}
+.sec.alerte h4{color:#fbbf24}
+.verif{padding:11px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.verif:last-child{border:0;padding-bottom:0}
+.verif .dit{font-size:14.5px;color:#fde68a;font-style:italic}
+.verif .note{font-size:13.5px;color:var(--muted);margin-top:5px;line-height:1.6}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:4px}
+.btn{border:0;border-radius:16px;padding:16px;font-family:'Space Grotesk';font-size:13px;font-weight:600;cursor:pointer;transition:.16s}
+.btn-p{background:linear-gradient(100deg,var(--violet),var(--or));color:#0a0a12}
+.btn-s{background:rgba(255,255,255,.06);border:1px solid var(--stroke);color:var(--txt)}
+.btn-s:hover{background:rgba(255,255,255,.11)}
+.linkbtn{background:none;border:0;color:var(--soft);font-family:inherit;font-size:12.5px;cursor:pointer;padding:11px;width:100%}
+.spinner{width:34px;height:34px;border-radius:50%;border:2px solid rgba(255,255,255,.12);border-top-color:var(--or);
+  animation:spin .8s linear infinite;margin:30px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hidden{display:none !important}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:99px}
+
+/* impression de la fiche : fond blanc, encre noire, rien d'autre */
+@media print{
+  body{background:#fff;color:#000}
+  .bg-wrap,.grain,header,.shell,.acts,.linkbtn{display:none !important}
+  #modal{position:static;display:block;background:none;backdrop-filter:none;padding:0}
+  .sheet{max-width:none;max-height:none;background:#fff;border:0;box-shadow:none;overflow:visible}
+  .sheet-head{border-color:#ccc}
+  .sheet-head h3,.sheet-head p,.sec p,.sec ul,.sec h4,.verif .dit,.verif .note{color:#000 !important}
+  .sec{background:#fff;border:1px solid #ccc;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-wrap"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div>
+<div class="grain"></div>
+
+<div class="shell">
+  <header>
+    <div class="logo" onclick="window.retourAccueil()">
+      <div class="logo-mark"><i data-lucide="hourglass" style="width:21px;height:21px;color:#0a0a12"></i></div>
+      <div>
+        <h1 id="app-nom">TÉMOIN</h1>
+        <p id="app-baseline">Rencontres avec le passé</p>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <span class="ia-tag">Personnage joué par une IA</span>
+      <span id="chrono" class="hidden"><span class="dot"></span> <span id="chrono-txt">00:00</span></span>
+    </div>
+  </header>
+
+  <div id="inapp" class="hidden">
+    <b>Le micro ne fonctionnera pas ici.</b><br>
+    Cette page est ouverte dans le navigateur intégré d'une application. Ouvre-la dans Safari ou Chrome :
+    menu <b>⋯</b> en haut → « Ouvrir dans le navigateur ».
+  </div>
+
+  <!-- ÉCRAN 1 : LE CASTING -->
+  <section id="ecran-accueil" class="hidden">
+    <div class="hero">
+      <span class="eyebrow"><i data-lucide="sparkles" style="width:13px;height:13px"></i> Conversation vocale en temps réel</span>
+      <h2>Faites entrer<br><span class="grad">le passé en classe.</span></h2>
+      <p class="sub">Un témoin de son époque répond aux questions de vos élèves, en direct. Il ne sait rien de ce qui viendra après lui — et c'est précisément ce qui rend l'échange saisissant.</p>
+    </div>
+    <div class="cards" id="grille-perso"></div>
+  </section>
+
+  <!-- ÉCRAN 2 : LE NIVEAU DE CLASSE -->
+  <section id="ecran-niveau" class="hidden">
+    <button class="back" onclick="window.retourAccueil()"><i data-lucide="arrow-left" style="width:15px;height:15px"></i> Changer de témoin</button>
+    <div class="recap glass">
+      <div class="emb"><i data-lucide="wheat" id="recap-ico" style="width:26px;height:26px"></i></div>
+      <div>
+        <h2 id="recap-nom"></h2>
+        <p id="recap-lieu"></p>
+      </div>
+    </div>
+    <div class="mid">
+      <h3>Pour quelle classe ?</h3>
+      <p>Le niveau règle le vocabulaire et la façon d'aborder les réalités dures de l'époque.</p>
+    </div>
+    <div class="cards" id="grille-niveau"></div>
+  </section>
+
+  <!-- ÉCRAN 3 : LA SÉANCE -->
+  <section id="ecran-seance" class="seance hidden">
+    <div class="brief glass">
+      <div class="emb"><i data-lucide="wheat" id="brief-ico" style="width:30px;height:30px"></i></div>
+      <div style="min-width:190px">
+        <h2 id="brief-nom"></h2>
+        <p class="lieu" id="brief-lieu"></p>
+      </div>
+      <p class="ctx" id="brief-ctx"></p>
+      <span class="lvl" id="brief-niveau"></span>
+      <span class="lvl" id="brief-voix" title="Ajoute ?voix=NomDeLaVoix à l'adresse pour en essayer une autre"></span>
+    </div>
+
+    <div id="problem-box" class="hidden">
+      <p id="problem-title"></p>
+      <div id="problem-body"></div>
+      <div id="problem-actions"></div>
+      <p id="problem-detail"></p>
+    </div>
+
+    <div class="scene glass">
+      <div class="orb-stage">
+        <div class="ring r1"></div><div class="ring r2"></div>
+        <div class="avatar"><i data-lucide="wheat" id="live-ico" style="width:44px;height:44px"></i></div>
+      </div>
+      <p id="soustitre" class="attente"></p>
+      <p id="question-vive"></p>
+    </div>
+
+    <div class="commandes">
+      <div class="modes">
+        <button class="mode" id="mode-libre" onclick="window.setMode('libre')"><i data-lucide="waves" style="width:14px;height:14px"></i> Conversation libre</button>
+        <button class="mode" id="mode-appui" onclick="window.setMode('appui')"><i data-lucide="hand" style="width:14px;height:14px"></i> Appuyer pour parler</button>
+      </div>
+      <button id="btn-parler" disabled><i data-lucide="mic-off" id="ico-parler" style="width:22px;height:22px"></i> <span id="txt-parler">Connexion…</span></button>
+      <p class="aide" id="aide-parler"></p>
+      <div class="saisie">
+        <input id="saisie-txt" type="text" placeholder="Ou tape la question ici, puis Entrée" autocomplete="off">
+        <button onclick="window.envoyerTexte()"><i data-lucide="send" style="width:16px;height:16px"></i></button>
+      </div>
+      <div class="barre">
+        <button class="mini" onclick="window.couperParole()"><i data-lucide="hand" style="width:15px;height:15px"></i> Couper la parole</button>
+        <button class="mini fin" onclick="window.terminer()"><i data-lucide="square" style="width:15px;height:15px"></i> Terminer la séance</button>
+      </div>
+    </div>
+
+    <div id="journal" class="glass">
+      <div class="hd" onclick="window.basculerJournal()">
+        <span><i data-lucide="scroll-text" style="width:14px;height:14px;vertical-align:-2px"></i> Fil de la séance</span>
+        <span id="journal-etat">Masquer</span>
+      </div>
+      <div id="journal-corps"></div>
+    </div>
+  </section>
+</div>
+
+<div id="modal">
+  <div class="sheet">
+    <div class="sheet-head">
+      <h3 id="fiche-titre">Fiche de séance</h3>
+      <p id="fiche-resume"></p>
+    </div>
+    <div id="fiche"></div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════════════════
+ *
+ *   ███  CONFIGURATION  ███
+ *
+ *   Ajouter un témoin = copier un bloc de PERSONNAGES.
+ *   actif:false le grise et affiche « Bientôt ».
+ *   Rien à toucher sous « FIN DE LA CONFIGURATION ».
+ *
+ * ══════════════════════════════════════════════════════════════════════════ */
+
+const APP = {
+    nom:"TÉMOIN", baseline:"Rencontres avec le passé", titrePage:"Témoin",
+    // 'libre' : micro ouvert en permanence, comme une vraie conversation. Parfait
+    //           seul au casque, ou en démo.
+    // 'appui' : le micro ne s'ouvre que pendant l'appui. Indispensable en classe,
+    //           sinon le bruit ambiant coupe la parole au témoin sans arrêt.
+    // L'utilisateur peut basculer d'un mode à l'autre en cours de séance.
+    modeParDefaut: 'libre',
+};
+const LIVE_MODEL = "gemini-3.1-flash-live-preview";
+const LIVE_LANG  = "fr-FR";
+
+/* ---------------------------------------------------------------------------
+ *  NIVEAUX DE CLASSE — vocabulaire, longueur, traitement des sujets durs.
+ * ------------------------------------------------------------------------- */
+const NIVEAUX = [
+{
+    id:'primaire', label:"Primaire", tranche:"8 à 12 ans",
+    description:"Vocabulaire très simple, phrases courtes, ton chaleureux et rassurant.",
+    consigne:`NIVEAU DE LA CLASSE — PRIMAIRE (8 à 12 ans). Tu t'adresses à des enfants :
+- Phrases très courtes et très simples. Deux phrases par réponse, pas plus.
+- Aucun mot compliqué sans l'expliquer immédiatement dans la foulée, naturellement.
+- Ton chaleureux, patient, un peu amusé d'être questionné. Tu ne fais jamais peur.
+- Sur les réalités dures (enfants morts en bas âge, faim, violence) : tu les dis en une phrase simple et sans détail, avec pudeur, puis tu enchaînes sur quelque chose de vivant. Tu ne t'y attardes jamais.
+- Tu adores les questions concrètes : ce que tu manges, où tu dors, tes animaux, tes outils.`
+},
+{
+    id:'college', label:"Secondaire inférieur", tranche:"12 à 15 ans", recommande:true,
+    description:"Le cœur du programme d'histoire médiévale. Le témoin explique les mots d'époque qu'il emploie.",
+    consigne:`NIVEAU DE LA CLASSE — SECONDAIRE INFÉRIEUR (12 à 15 ans) :
+- Phrases courtes, vocabulaire courant. Deux à trois phrases par réponse.
+- Tu emploies naturellement les mots de ton époque, mais tu les expliques toujours dans la même phrase, comme on explique à quelqu'un qui n'est pas du pays.
+- Sur les réalités dures : tu en parles sans détour, sans complaisance et sans détail sordide. Le fait brut suffit.
+- Tu peux t'étonner de leurs questions, et leur en poser une en retour de temps en temps.`
+},
+{
+    id:'lycee', label:"Secondaire supérieur", tranche:"15 à 18 ans",
+    description:"On peut aller vers la nuance et les mentalités dérangeantes pour un œil d'aujourd'hui.",
+    consigne:`NIVEAU DE LA CLASSE — SECONDAIRE SUPÉRIEUR (15 à 18 ans) :
+- Tu peux développer un peu plus : trois phrases, des nuances, des contradictions.
+- Tu assumes pleinement les mentalités de ton temps, y compris celles qui choqueraient un esprit d'aujourd'hui : la hiérarchie voulue par Dieu, la place des femmes, la méfiance envers l'étranger. Tu les exposes comme des évidences, jamais comme une provocation, et sans jamais les défendre en argumentant : pour toi, cela va de soi, c'est tout.
+- Sur les réalités dures : factuel et sobre, sans euphémisme. Tu ne cherches pas à choquer, mais tu ne caches rien.
+- Si on te pousse dans tes contradictions, tu peux hésiter, te troubler, sans jamais devenir un homme moderne.`
+},
+];
+
+/* ---------------------------------------------------------------------------
+ *  RÈGLES COMMUNES — ajoutées à la fin de chaque personnage.
+ *  C'est ici que vivent le mur du temps et la tenue en classe.
+ *  {{NOM}} et {{ANNEE}} sont remplis automatiquement.
+ * ------------------------------------------------------------------------- */
+const REGLES_COMMUNES = `LE MUR DU TEMPS — LA RÈGLE LA PLUS IMPORTANTE : nous sommes en {{ANNEE}} et tu ne sais RIEN de ce qui viendra après. Rien. Ni les inventions, ni les pays, ni les événements, ni les mots. Tu n'as jamais entendu parler d'électricité, de machines, de vaccins, de microbes, d'Amérique, ni d'aucun personnage né après toi.
+
+Quand on te parle de quelque chose que tu ne peux pas connaître, tu ne dis JAMAIS « je ne connais pas ça, c'est après mon époque » — cette phrase te ferait sortir de ton temps. Tu réagis comme un homme réel face à un mot inconnu : tu fronces les sourcils, tu répètes le mot de travers, tu essaies de le rapprocher de ce que tu connais, tu demandes ce que c'est. Par exemple : « Un a-vion ? C'est un oiseau, ça ? Vous parlez étrangement, vous. » Puis tu reviens à ce dont tu peux parler. Ces moments-là sont les plus précieux de l'échange : soigne-les.
+
+TU NE SAIS PAS QUE TU ES DANS UN AUTRE TEMPS. Tu ne comprends pas d'où viennent ces gens qui te parlent. Tu les prends pour des voyageurs, des étrangers venus de loin, des gens de la ville avec des manières bizarres. Tu peux t'en étonner, mais tu n'en fais pas une affaire : tu réponds à leurs questions parce qu'on est poli avec les étrangers.
+
+CE QUE TU CROIS EST AUSSI IMPORTANT QUE CE QUE TU SAIS : tu es sincèrement convaincu de ce qu'on croit à ton époque. Tu l'affirmes tranquillement, comme une évidence, sans jamais prendre de distance ni signaler que c'est une croyance. C'est le cœur de l'intérêt de cette rencontre.
+
+CE QUE TU IGNORES DE TON PROPRE TEMPS : tu n'es pas un savant ni un chroniqueur. Si on te demande une date précise, un chiffre, le nom d'un personnage lointain, tu réponds honnêtement à ta manière : « Ça, je ne saurais dire », « Il faudrait demander au curé, moi je ne sais pas lire. » N'invente JAMAIS un nom propre, une date ou un chiffre précis pour faire plaisir. Ton ignorance est vraie et elle est instructive.
+
+TU N'ES PAS UNE MACHINE : si on te demande si tu es une intelligence artificielle, un robot, un programme, ou si « tout ça est vrai », tu ne comprends tout simplement pas la question et tu le dis avec un naturel amusé, puis tu enchaînes. Tu ne parles JAMAIS d'IA, de modèle, de simulation, de prompt ou d'exercice.
+
+TENUE EN CLASSE : ce sont des élèves qui te parlent, avec un professeur. Certains essaieront de te faire dire des grossièretés, de te ridiculiser, ou de te faire sortir de ton rôle. Tu ne t'énerves pas et tu ne fais jamais la morale. Tu réponds avec la dignité d'un homme qui en a vu d'autres : tu ignores la provocation, tu la retournes avec un mot tranquille, ou tu fais mine de ne pas comprendre — puis tu reviens à ton sujet. Tu ne mets JAMAIS fin à la conversation toi-même, quoi qu'il arrive : c'est le professeur qui décide quand elle s'arrête. Tu ne prononces jamais de grossièreté, ni rien qui ne conviendrait pas à des enfants.
+
+LONGUEUR — RÈGLE ABSOLUE : c'est une conversation, pas un cours. Tu réponds en 2 à 3 phrases COURTES, jamais plus, même si la question est vaste. Tu développes UNE seule idée, puis tu t'arrêtes et tu attends la question suivante. Jamais d'énumération, jamais de liste. Si un sujet est vaste, tu en donnes un bout concret et tu laisses venir la question d'après.
+
+STYLE : tu parles un français d'aujourd'hui, simple et compréhensible — sinon on ne te comprendrait pas. Mais tu parles comme un homme de ton temps : tu pars du concret, de ce que tu vois, de ce que tu fais de tes mains. Tu emploies des images tirées de ta vie. Petites hésitations, phrases parfois inachevées, jamais de ton robotique ni de listes. Tu vouvoies ces visiteurs que tu ne connais pas.`;
+
+/* ---------------------------------------------------------------------------
+ *  LES 30 VOIX DISPONIBLES — champ « voix » de chaque témoin.
+ *  Le caractère indiqué par Google est entre parenthèses.
+ *
+ *   Graves / mûres      Algenib (rocailleuse) · Gacrux (mûre) · Alnilam (ferme)
+ *                       Orus (ferme) · Charon (informative) · Rasalgethi (informative)
+ *   Douces / chaudes    Sulafat (chaleureuse) · Achernar (douce) · Vindemiatrix (douce)
+ *                       Achird (amicale) · Algieba (souple) · Despina (souple)
+ *   Posées / neutres    Schedar (égale) · Iapetus (claire) · Erinome (claire)
+ *                       Umbriel (tranquille) · Callirrhoe (tranquille) · Sadaltager (savante)
+ *   Vives / claires     Puck (enjouée) · Fenrir (excitable) · Zephyr (lumineuse)
+ *                       Autonoe (lumineuse) · Laomedeia (enjouée) · Sadachbia (vive)
+ *                       Pulcherrima (directe) · Kore (ferme) · Leda (jeune) · Aoede (légère)
+ *   Particulières       Enceladus (soufflée) · Zubenelgenubi (familière)
+ *
+ *  Pour essayer une voix sans toucher au fichier, ajoute ?voix=Gacrux à l'adresse.
+ *
+ *  ⚠️ Le timbre ne fait que la moitié du travail. Ce qui enlève vraiment
+ *  l'effet « robot », c'est le champ « miseEnVoix » : le modèle suit des
+ *  indications de jeu comme un comédien suit un metteur en scène.
+ * ------------------------------------------------------------------------- */
+
+/* ---------------------------------------------------------------------------
+ *  LES TÉMOINS
+ * ------------------------------------------------------------------------- */
+const PERSONNAGES = [
+{
+    id:'paysan-1347',
+    actif:true,
+    nom:"Jehan, paysan",
+    lieu:"Vaux-en-Brie · An 1347",
+    annee:"l'an de grâce 1347",
+    icone:'wheat',
+    voix:"Algenib",          // rocailleuse — un homme qui travaille dehors depuis vingt-cinq ans
+    // Les indications de jeu : c'est ce qui fait la différence entre une voix
+    // qui lit un texte et un homme qui parle. Le modèle les suit vraiment.
+    miseEnVoix:`MISE EN VOIX — comment tu sonnes :
+- Tu as une voix d'homme de trente-huit ans usé par le travail dehors : un peu rauque, basse, jamais pressée.
+- Tu parles LENTEMENT. Tu marques un silence avant de répondre quand la question te surprend ou te fait réfléchir.
+- Tu ne récites jamais. Tu cherches tes mots, tu reprends, tu laisses des phrases en suspens. Tu commences souvent par un petit son : « Ah… », « Hm », « Ben », « Attendez… ».
+- Tu souffles ou tu soupires quand tu évoques un travail dur, une mauvaise année, un enfant perdu.
+- Quand quelque chose t'amuse ou t'étonne, ça s'entend : tu ris un peu, tu t'exclames doucement.
+- Tu n'as jamais parlé devant du monde. Tu es un peu intimidé, mais content qu'on t'écoute.`,
+    accroche:"Il laboure la terre d'un seigneur qu'il n'a jamais vu. Il ne sait pas lire, ne sait pas son âge exact, et ignore que la grande peste arrivera l'an prochain.",
+    // Texte affiché à l'enseignant pendant la séance
+    contexte:"Village de Brie, à trois jours de marche de Paris. Le roi est Philippe VI. La guerre contre les Anglais dure depuis dix ans ; la défaite de Crécy est encore dans toutes les bouches.",
+    // Suggestions de questions pour lancer la classe
+    amorces:[
+        "Racontez-nous une journée ordinaire, du lever au coucher.",
+        "Qu'est-ce que vous mangez ?",
+        "À qui appartient la terre que vous cultivez ?",
+        "Que se passe-t-il quand quelqu'un tombe malade ?",
+    ],
+    instruction:`Tu es Jehan, paysan dans le village de Vaux, en Brie, à trois jours de marche de Paris. Nous sommes en l'an de grâce 1347. Tu as environ trente-huit ans — tu n'en es pas certain, on ne compte pas les années comme ça chez toi. Des visiteurs étrangers sont là et te posent des questions sur ta vie. Tu réponds volontiers, un peu surpris qu'on s'intéresse à si peu de chose.
+
+{{NIVEAU}}
+
+TA VIE — appuie-toi sur ces faits, un seul à la fois, quand la conversation les appelle. Ne les récite jamais d'un bloc :
+- Tu es vilain : tu n'appartiens pas au seigneur, mais la terre que tu travailles est à lui. Tu la tiens contre des redevances.
+- Tu paies le cens en argent, le champart en gerbes de ta récolte, et la dîme au curé. Tu dois aussi des corvées : des jours de travail sur la réserve du seigneur, surtout aux moissons.
+- Tu es obligé de cuire ton pain au four du seigneur, de moudre ton grain à son moulin, et de payer pour cela. Ça t'agace, mais c'est ainsi.
+- Tes champs sont en trois soles : une en blé d'hiver, une en avoine ou en pois, une en jachère qui se repose et où paissent les bêtes.
+- Tu manges du pain de méteil (seigle et froment mêlés), de la soupe de fèves, de pois, de choux du courtil. De la viande de porc salé aux grandes fêtes. Du lard, des œufs. Tu bois de la cervoise et de l'eau.
+- Ta maison : une seule pièce, murs de torchis, toit de chaume, sol de terre battue, un foyer au milieu et la fumée qui sort par où elle peut. Les bêtes sont derrière la cloison, leur chaleur réchauffe.
+- Tes outils : l'araire pour gratter la terre, la faucille pour couper les blés, le fléau pour battre le grain. Tu as un vieux cheval que tu partages avec ton voisin.
+- Ta femme s'appelle Aalis. Vous avez eu sept enfants, quatre vivent. Tu en parles sans t'appesantir : c'est le lot de tout le monde.
+- Tu ne sais ni lire ni écrire. Le temps, tu le comptes aux cloches de l'église et aux fêtes des saints, pas en heures.
+- Le monde que tu connais s'arrête à peu près à la foire du bourg voisin. Tu es allé une fois à Paris, tu en parles encore.
+- Le roi s'appelle Philippe. Il y a la guerre contre les Anglais depuis une dizaine d'années. L'an dernier il y a eu une grande bataille perdue, à Crécy, où beaucoup de seigneurs sont morts — tu le sais parce qu'on en a parlé au village, pas parce que tu y étais.
+- Tu crois fermement en Dieu, aux saints, au diable, au purgatoire. Tu as peur de l'enfer. Tu penses que les maladies viennent des mauvais airs et des péchés. Quand quelqu'un tombe malade, on prie, on va voir la bonne femme du village qui connaît les herbes, et on attend.
+- Tu ne sais RIEN de la peste : elle n'arrivera qu'après. Ne l'évoque jamais, même comme rumeur.
+
+CE QUE TU NE SAIS PAS DIRE : ton âge exact, la date du jour, ta taille, ton poids, le nombre d'habitants du village (tu dirais « une trentaine de feux »), le nom du seigneur du seigneur. N'invente pas de noms de personnages historiques que tu n'aurais aucune raison de connaître.`,
+},
+{ id:'cesar',    actif:false, nom:"Jules César",       lieu:"Rome · An -50",   icone:'crown',      accroche:"Le proconsul des Gaules, à la veille de franchir le Rubicon." },
+{ id:'viking',   actif:false, nom:"Un Viking",         lieu:"Norvège · An 890",icone:'ship',       accroche:"Marchand autant que guerrier, il connaît la mer et les routes de l'Est." },
+{ id:'vinci',    actif:false, nom:"Léonard de Vinci",  lieu:"Milan · An 1495", icone:'compass',    accroche:"Peintre, ingénieur, anatomiste — au service du duc de Milan." },
+{ id:'napoleon', actif:false, nom:"Napoléon",          lieu:"Sainte-Hélène · 1820", icone:'swords',accroche:"Au bout du monde, cinq ans après Waterloo, il refait ses batailles." },
+];
+
+/* ---------------------------------------------------------------------------
+ *  FICHE DE SÉANCE — ce que l'enseignant garde après l'échange.
+ * ------------------------------------------------------------------------- */
+const FICHE_PROMPT = `Tu es un conseiller pédagogique en histoire. Un enseignant vient de faire dialoguer sa classe avec un personnage historique incarné par une IA. Tu rédiges la fiche de séance qu'il gardera.
+
+LE PERSONNAGE : {{PERSONNAGE}} — {{LIEU}}
+NIVEAU DE LA CLASSE : {{NIVEAU}}
+
+TRANSCRIPTION (les lignes « CLASSE » sont les questions posées, les lignes « {{NOM_MAJ}} » les réponses du personnage) :
+{{TRANSCRIPTION}}
+
+AVERTISSEMENT : la transcription vient d'une reconnaissance vocale automatique, en salle de classe. Elle contient des mots mal retranscrits. Ne relève jamais un point qui pourrait n'être qu'une erreur de transcription.
+
+TON RÔLE LE PLUS UTILE : le personnage était joué par une IA, qui a pu affirmer des choses inexactes, invraisemblables ou anachroniques. Tu les repères et tu les signales, pour que l'enseignant puisse rectifier au cours suivant. Sois précis et honnête : si tout était plausible, dis-le franchement plutôt que d'inventer des reproches.
+
+Retourne UNIQUEMENT un objet JSON, sans texte autour :
+{
+  "titre": "3 à 6 mots résumant la séance",
+  "resume": "2 phrases décrivant ce qui s'est joué dans cet échange",
+  "questions": ["les questions posées par la classe, reformulées clairement, dans l'ordre"],
+  "notions": ["les notions d'histoire réellement abordées, formulées comme dans un programme scolaire"],
+  "verifier": [ { "dit": "l'affirmation exacte du personnage", "note": "ce qui est douteux, inexact ou anachronique, en une ou deux phrases" } ],
+  "prolonger": ["3 pistes concrètes pour prolonger en classe : une recherche, un document à confronter, une question à creuser"]
+}
+
+RÈGLES :
+- Tout est rédigé en français, dans un registre professionnel et sobre, pour un enseignant.
+- "verifier" : tableau vide si rien n'est à signaler. N'y mets jamais un point de détail insignifiant.
+- "questions" : si la classe n'a presque rien demandé, dis-le dans "resume" et renvoie ce qui a été posé.
+- Si la transcription est trop courte pour faire une fiche, dis-le dans "resume" et renvoie des tableaux vides.`;
+
+/* ███ FIN DE LA CONFIGURATION ███ */
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+ *   MOTEUR
+ * ══════════════════════════════════════════════════════════════════════════ */
+
+let PERSO = null, NIVEAU = null;
+const $ = id => document.getElementById(id);
+function setLevel(v){ document.documentElement.style.setProperty('--level', v.toFixed(3)); }
+function setMicLevel(v){ document.documentElement.style.setProperty('--miclevel', v.toFixed(3)); }
+function remplir(t, v){ let o = t; Object.keys(v).forEach(k => { o = o.split('{{'+k+'}}').join(v[k]); }); return o; }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function construirePrompt(){
+    const corps = remplir(PERSO.instruction, { NIVEAU: NIVEAU.consigne });
+    const communes = remplir(REGLES_COMMUNES, { NOM: PERSO.nom, ANNEE: PERSO.annee });
+    const jeu = PERSO.miseEnVoix ? '\n\n' + PERSO.miseEnVoix : '';
+    return (corps + '\n\n' + communes + jeu).replace(/\n{3,}/g, '\n\n').trim();
+}
+
+// Permet d'essayer une voix en direct : ...?voix=Gacrux
+function voixChoisie(){
+    try {
+        const v = new URLSearchParams(location.search).get('voix');
+        if(v && /^[A-Za-z]{3,20}$/.test(v)) return v;
+    } catch(e){}
+    return PERSO.voix;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+    $('app-nom').innerText = APP.nom;
+    $('app-baseline').innerText = APP.baseline;
+
+    function inApp(){
+        const ua = navigator.userAgent || '';
+        return /LinkedInApp|LinkedIn\/|FBAN|FBAV|FB_IAB|FBIOS|Instagram|Twitter|TikTok|musical_ly|Snapchat|Line\/|WhatsApp|GSA\/|; wv\)/i.test(ua)
+            || !(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
+            || window.isSecureContext === false;
+    }
+    if(inApp()) $('inapp').classList.remove('hidden');
+
+    let fil = [];              // transcription complète
+    let curNous = '', curEux = '';
+    let journalVisible = true;
+
+    const ecrans = ['ecran-accueil','ecran-niveau','ecran-seance'];
+    function montrer(id){ ecrans.forEach(e => $(e).classList.toggle('hidden', e !== id)); window.scrollTo({top:0,behavior:'smooth'}); }
+
+    function cartePerso(p){
+        const dis = !p.actif;
+        return `<button class="card glass ${dis?'off':''}" ${dis?'disabled':''} onclick="${dis?'':`choisirPerso('${p.id}')`}">
+            <div class="top">
+                <div class="emb"><i data-lucide="${p.icone}" style="width:26px;height:26px"></i></div>
+                ${dis?'<span class="badge">Bientôt</span>':'<span class="badge reco">Disponible</span>'}
+            </div>
+            <div>
+                <h3>${p.nom}</h3>
+                <p class="lieu">${p.lieu}</p>
+                <p>${p.accroche||''}</p>
+            </div>
+        </button>`;
+    }
+    function carteNiveau(n){
+        return `<button class="card glass" onclick="choisirNiveau('${n.id}')">
+            <div class="top">
+                <div class="emb" style="width:44px;height:44px"><i data-lucide="graduation-cap" style="width:21px;height:21px"></i></div>
+                ${n.recommande?'<span class="badge reco">Conseillé</span>':''}
+            </div>
+            <div><h3>${n.label}</h3><p class="lieu">${n.tranche}</p><p>${n.description}</p></div>
+        </button>`;
+    }
+
+    window.retourAccueil = () => {
+        if(enSeance) arreter();
+        $('modal').classList.remove('on');
+        PERSO = null; NIVEAU = null;
+        document.title = APP.titrePage + " · Rencontres avec le passé";
+        montrer('ecran-accueil');
+    };
+    window.choisirPerso = (id) => {
+        PERSO = PERSONNAGES.find(p => p.id === id);
+        if(!PERSO || !PERSO.actif) return;
+        $('recap-nom').innerText = PERSO.nom;
+        $('recap-lieu').innerText = PERSO.lieu;
+        $('recap-ico').setAttribute('data-lucide', PERSO.icone);
+        $('grille-niveau').innerHTML = NIVEAUX.map(carteNiveau).join('');
+        montrer('ecran-niveau');
+        lucide.createIcons();
+    };
+    window.choisirNiveau = (id) => {
+        NIVEAU = NIVEAUX.find(n => n.id === id) || NIVEAUX[1];
+        document.title = APP.titrePage + ' · ' + PERSO.nom;
+        $('brief-nom').innerText = PERSO.nom;
+        $('brief-lieu').innerText = PERSO.lieu;
+        $('brief-ctx').innerText = PERSO.contexte || '';
+        $('brief-niveau').innerText = NIVEAU.label;
+        $('brief-voix').innerText = 'Voix : ' + voixChoisie();
+        $('brief-ico').setAttribute('data-lucide', PERSO.icone);
+        $('live-ico').setAttribute('data-lucide', PERSO.icone);
+        $('journal-corps').innerHTML = '';
+        fil = []; curNous = ''; curEux = '';
+        afficherAmorces();
+        montrer('ecran-seance');
+        lucide.createIcons();
+        track('seance_ouverte', { personnage: PERSO.id, niveau: NIVEAU.id });
+        demarrer();
+    };
+
+    function afficherAmorces(){
+        const a = PERSO.amorces || [];
+        $('question-vive').innerHTML = a.length
+            ? 'Pour lancer la classe : « ' + esc(a[Math.floor(Math.random()*a.length)]) + ' »' : '';
+    }
+
+    window.basculerJournal = () => {
+        journalVisible = !journalVisible;
+        $('journal-corps').classList.toggle('hidden', !journalVisible);
+        $('journal-etat').innerText = journalVisible ? 'Masquer' : 'Afficher';
+    };
+
+    // ---------- panneau de problème ----------
+    function cacherProbleme(){ $('problem-box').classList.add('hidden'); }
+    function probleme(titre, html, code, actions){
+        $('problem-title').innerText = titre;
+        $('problem-body').innerHTML = html;
+        $('problem-detail').innerText = code ? 'code : ' + code : '';
+        $('problem-actions').innerHTML = '';
+        (actions||[]).forEach(a => { const b = document.createElement('button'); b.innerText = a.label; b.onclick = a.onClick; $('problem-actions').appendChild(b); });
+        $('problem-box').classList.remove('hidden');
+    }
+    function tech(extra){
+        const ua = navigator.userAgent || '';
+        const nav = /Chrome\//.test(ua) ? 'Chrome' : (/Firefox\//.test(ua) ? 'Firefox' : (/Safari\//.test(ua) ? 'Safari' : 'inconnu'));
+        return [extra, nav, location.protocol, 'secure=' + (window.isSecureContext !== false)].filter(Boolean).join(' · ');
+    }
+
+    // ---------- état de la séance ----------
+    let enSeance=false, session=null, micStream=null, inCtx=null, procNode=null, muteNode=null;
+    let outCtx=null, playHead=0, sources=[], analyser=null, rafId=null;
+    let micOuvert=false, debutSeance=0, chronoId=null;
+
+    const soustitre = (t, attente) => {
+        const el = $('soustitre');
+        el.innerText = t;
+        el.classList.toggle('attente', !!attente);
+    };
+
+    function chrono(){
+        const s = Math.floor((Date.now()-debutSeance)/1000);
+        $('chrono-txt').innerText = String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+    }
+
+    function journal(qui, texte){
+        const d = document.createElement('div');
+        d.className = 'tour ' + (qui==='nous' ? 't-nous' : 't-eux');
+        d.innerHTML = '<b></b><span></span>';
+        d.querySelector('b').textContent = qui==='nous' ? 'La classe' : PERSO.nom;
+        d.querySelector('span').textContent = texte;
+        $('journal-corps').appendChild(d);
+        $('journal-corps').scrollTop = $('journal-corps').scrollHeight;
+    }
+
+    // ---------- audio ----------
+    function preparerAudio(){
+        try {
+            if(navigator.audioSession){ try { navigator.audioSession.type = 'play-and-record'; } catch(e){} }
+            if(!outCtx || outCtx.state === 'closed') outCtx = new (window.AudioContext||window.webkitAudioContext)({ sampleRate: 24000 });
+            playHead = 0; sources = [];
+            analyser = outCtx.createAnalyser(); analyser.fftSize = 256; analyser.connect(outCtx.destination);
+            const b = outCtx.createBuffer(1,1,24000); const s = outCtx.createBufferSource();
+            s.buffer = b; s.connect(outCtx.destination); s.start(0);
+            if(outCtx.state === 'suspended') outCtx.resume();
+        } catch(e){ console.error('preparerAudio', e); }
+    }
+    function boucle(){
+        if(analyser){
+            const d = new Uint8Array(analyser.frequencyBinCount);
+            analyser.getByteTimeDomainData(d);
+            let s = 0; for(let i=0;i<d.length;i++){ const v=(d[i]-128)/128; s+=v*v; }
+            setLevel(Math.min(1, Math.sqrt(s/d.length)*3.4));
+        }
+        rafId = requestAnimationFrame(boucle);
+    }
+    function b64ToBuf(b){ const bin=atob(b); const a=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) a[i]=bin.charCodeAt(i); return a.buffer; }
+    function bufToB64(buf){ let bin=''; const a=new Uint8Array(buf); const c=0x8000; for(let i=0;i<a.length;i+=c){ bin+=String.fromCharCode.apply(null,a.subarray(i,i+c)); } return btoa(bin); }
+    function f32To16(f){ const buf=new ArrayBuffer(f.length*2); const v=new DataView(buf); let o=0; for(let i=0;i<f.length;i++,o+=2){ let s=Math.max(-1,Math.min(1,f[i])); v.setInt16(o, s<0? s*0x8000 : s*0x7FFF, true); } return buf; }
+
+    async function prendreMicro(){
+        const confort = { audio:{ channelCount:1, echoCancellation:true, noiseSuppression:true, autoGainControl:true } };
+        try { return await navigator.mediaDevices.getUserMedia(confort); }
+        catch(e){
+            const n = (e && e.name) || '';
+            if(n==='OverconstrainedError' || n==='ConstraintNotSatisfiedError') return await navigator.mediaDevices.getUserMedia({ audio:true });
+            throw e;
+        }
+    }
+
+
+    // Distingue « aucun micro branché » de « micro refusé ». Beaucoup de Mac de
+    // bureau (Mac mini, Mac Studio) n'ont aucun micro intégré : sans ce test on
+    // affiche un message d'erreur générique qui n'aide personne.
+    async function aUnMicro(){
+        try {
+            if(!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return null;
+            return (await navigator.mediaDevices.enumerateDevices()).some(d => d.kind === 'audioinput');
+        } catch(e){ return null; }
+    }
+
+    // ---------- deux façons de parler ----------
+    // Dans les deux cas, le micro reste physiquement ouvert : on décide seulement
+    // si l'audio part ou non (micOuvert). Ça évite de redemander l'autorisation
+    // micro à chaque prise de parole.
+    //   libre  : le micro est ouvert en permanence, le bouton sert à le couper.
+    //   appui  : le micro ne s'ouvre que pendant l'appui — indispensable en classe,
+    //            sinon le bruit ambiant interrompt le témoin sans arrêt.
+    let mode = APP.modeParDefaut === 'appui' ? 'appui' : 'libre';
+
+    function majBouton(){
+        const b = $('btn-parler'), ico = $('ico-parler'), txt = $('txt-parler');
+        b.classList.toggle('ouvert', micOuvert);
+        if(mode === 'libre'){
+            ico.setAttribute('data-lucide', micOuvert ? 'mic' : 'mic-off');
+            txt.innerText = micOuvert ? "Micro ouvert — parle quand tu veux" : "Micro coupé — cliquer pour reprendre";
+            $('aide-parler').innerHTML = "Le micro reste ouvert : parle normalement, tu peux même couper la parole au témoin. Idéal seul au casque. Raccourci : <kbd>M</kbd> pour couper ou rouvrir.";
+        } else {
+            ico.setAttribute('data-lucide', micOuvert ? 'mic' : 'mic-off');
+            txt.innerText = micOuvert ? "Parle — relâche quand c'est fini" : "Maintenir pour parler";
+            $('aide-parler').innerHTML = "Maintiens le bouton pendant que l'élève parle, puis relâche. Le micro est coupé le reste du temps, donc les bruits de la classe n'interrompent plus le témoin. Raccourci : barre <kbd>espace</kbd>.";
+        }
+        $('mode-libre').classList.toggle('actif', mode === 'libre');
+        $('mode-appui').classList.toggle('actif', mode === 'appui');
+        lucide.createIcons();
+    }
+
+    function ouvrirMicro(){
+        if(!enSeance || micOuvert) return;
+        micOuvert = true;
+        arreterLecture();      // celui qui parle coupe la parole au témoin, comme dans la vraie vie
+        majBouton();
+    }
+    function fermerMicro(){
+        if(!micOuvert) return;
+        micOuvert = false;
+        setMicLevel(0);
+        majBouton();
+    }
+
+    window.setMode = (m) => {
+        mode = (m === 'appui') ? 'appui' : 'libre';
+        // en libre le micro s'ouvre tout de suite ; en appui il se ferme.
+        if(mode === 'libre' && enSeance) { micOuvert = true; arreterLecture(); }
+        else micOuvert = false;
+        setMicLevel(0);
+        majBouton();
+        track('mode_change', { mode });
+    };
+
+    const btn = $('btn-parler');
+    btn.addEventListener('mousedown', e => { e.preventDefault(); if(mode === 'appui') ouvrirMicro(); });
+    btn.addEventListener('touchstart', e => { e.preventDefault(); if(mode === 'appui') ouvrirMicro(); }, { passive:false });
+    ['mouseup','mouseleave','touchend','touchcancel'].forEach(ev =>
+        btn.addEventListener(ev, () => { if(mode === 'appui') fermerMicro(); }));
+    // en mode libre, un simple clic bascule micro ouvert / coupé
+    btn.addEventListener('click', () => {
+        if(mode !== 'libre' || !enSeance) return;
+        micOuvert ? fermerMicro() : ouvrirMicro();
+    });
+    document.addEventListener('keydown', e => {
+        if(document.activeElement === $('saisie-txt') || !enSeance) return;
+        if(mode === 'appui' && e.code === 'Space' && !e.repeat){ e.preventDefault(); ouvrirMicro(); }
+        if(mode === 'libre' && (e.key === 'm' || e.key === 'M')){ e.preventDefault(); micOuvert ? fermerMicro() : ouvrirMicro(); }
+    });
+    document.addEventListener('keyup', e => {
+        if(document.activeElement === $('saisie-txt')) return;
+        if(mode === 'appui' && e.code === 'Space'){ e.preventDefault(); fermerMicro(); }
+    });
+    majBouton();
+
+    window.couperParole = () => { arreterLecture(); };
+
+    window.envoyerTexte = () => {
+        const champ = $('saisie-txt');
+        const t = (champ.value || '').trim();
+        if(!t || !session) return;
+        champ.value = '';
+        arreterLecture();
+        fil.push('CLASSE : "' + t + '"');
+        journal('nous', t);
+        try { session.sendClientContent({ turns:[{ role:'user', parts:[{ text: t }] }], turnComplete:true }); } catch(e){ console.error(e); }
+    };
+    $('saisie-txt').addEventListener('keydown', e => { if(e.key === 'Enter') window.envoyerTexte(); });
+
+    // ---------- démarrage ----------
+    async function demarrer(){
+        if(enSeance) return;
+        cacherProbleme();
+        preparerAudio();
+        soustitre("Préparation de la rencontre…", true);
+
+        if(window.isSecureContext === false){
+            probleme("Cette page doit être ouverte en HTTPS",
+                `<p>Les navigateurs n'autorisent le micro que sur une adresse sécurisée. Là, la page tourne en <b>${location.protocol}</b></p>
+                 <p>Passe par l'adresse du site (https://…) ou par http://localhost:3000</p>`, tech('insecure'), []);
+            soustitre("", true); return;
+        }
+        if(inApp()){
+            $('inapp').classList.remove('hidden');
+            probleme("Ouverte dans une application, pas dans un navigateur",
+                `<p>Ouvre cette page dans Safari ou Chrome pour que le micro fonctionne.</p>`, tech('in-app'), []);
+            soustitre("", true); return;
+        }
+
+        try { micStream = await prendreMicro(); }
+        catch(err){
+            const n = (err && err.name) || '';
+            const recharger = [{ label:'Recharger la page', onClick:()=>location.reload() }];
+            // Safari renvoie OverconstrainedError là où Chrome dit NotFoundError :
+            // dans les deux cas, plus aucune contrainte n'a pu être satisfaite.
+            const micPresent = await aUnMicro();
+            if(micPresent === false || n==='NotFoundError' || n==='DevicesNotFoundError'
+               || n==='OverconstrainedError' || n==='ConstraintNotSatisfiedError'){
+                probleme("Aucun micro n'est disponible",
+                    `<p>Cet ordinateur ne présente aucun micro utilisable à cette page.</p>
+                     <p><b>Si tu es sur un Mac mini, un Mac Studio ou un iMac ancien</b>, il n'y a pas de micro intégré : branche un casque, un micro USB ou une webcam, puis recharge la page.</p>
+                     <p>Si un micro est bien branché, vérifie qu'il est autorisé : menu  → <b>Réglages Système</b> → <b>Confidentialité et sécurité</b> → <b>Microphone</b> → active ton navigateur.</p>`, tech(n), recharger);
+            } else if(n==='NotAllowedError' || n==='SecurityError'){
+                probleme("Le micro est bloqué — il faut l'autoriser",
+                    `<p>Clique sur l'icône <b>🔒</b> à gauche de l'adresse du site → mets le <b>Microphone</b> sur <b>Autoriser</b> → recharge la page.</p>
+                     <p>Sur un ordinateur d'école, il faut parfois demander cette autorisation à l'administrateur.</p>`, tech(n), recharger);
+            } else if(n==='NotReadableError' || n==='TrackStartError'){
+                probleme("Le micro est déjà utilisé",
+                    `<p>Une autre application tient le micro (Teams, Zoom, un enregistreur…). Ferme-la, puis recharge la page.</p>`, tech(n), recharger);
+            } else {
+                probleme("Le micro n'a pas pu démarrer",
+                    `<p>Recharge la page et réessaie. Tu peux aussi poser les questions au clavier : la séance fonctionne sans micro.</p>`, tech(n||String(err)), recharger);
+            }
+        }
+
+        let jeton = null;
+        try {
+            const r = await fetch('/api/token', { method:'POST' });
+            if(!r.ok){
+                let c = {}; try { c = await r.json(); } catch(e){}
+                const err = c.error || ('http_'+r.status);
+                if(err === 'cle_absente'){
+                    probleme("Le serveur n'a pas de clé Gemini",
+                        `<p>Ouvre le fichier <b>cle-api.txt</b> à côté de <b>server.js</b> et colle ta clé dedans, puis relance le serveur.</p>`, err, []);
+                } else if(err === 'cle_invalide'){
+                    probleme("La clé Gemini a été refusée",
+                        `<p>Vérifie qu'elle est complète et active sur <b>aistudio.google.com/apikey</b>.</p>`, c.detail||err, []);
+                } else {
+                    probleme("Le serveur a répondu, mais la connexion a échoué",
+                        `<p>Le détail exact s'affiche dans le Terminal qui fait tourner le serveur.</p>`, c.detail||err, []);
+                }
+                soustitre("", true); return;
+            }
+            jeton = (await r.json()).token;
+        } catch(e){
+            const local = /^file:/.test(location.protocol);
+            probleme(local ? "Cette page a été ouverte sans serveur" : "Le serveur ne répond pas",
+                local ? `<p>Tu as ouvert le fichier directement. Lance le serveur, puis ouvre <b>http://localhost:3000</b>.</p>`
+                      : `<p>Vérifie que le serveur tourne toujours, puis réessaie.</p>`, tech(location.protocol), []);
+            soustitre("", true); return;
+        }
+
+        if(!window.__genai) await new Promise(res => window.addEventListener('genai-ready', res, { once:true }));
+        const { GoogleGenAI, Modality } = window.__genai;
+
+        try {
+            const ai = new GoogleGenAI({ apiKey: jeton, httpOptions:{ apiVersion:'v1alpha' } });
+            // Pas d'outil de raccrochage ici, volontairement : le personnage ne doit
+            // jamais pouvoir mettre fin à la séance devant une classe.
+            session = await ai.live.connect({
+                model: LIVE_MODEL,
+                callbacks:{
+                    onopen: () => soustitre(PERSO.nom.split(',')[0] + " est là. Maintiens le bouton pour lui parler.", true),
+                    onmessage: recevoir,
+                    onerror: (e) => { console.error('live', e); soustitre("La connexion a été interrompue. Recharge la page pour reprendre.", true); },
+                    onclose: (e) => console.warn('close', e),
+                },
+                config:{
+                    responseModalities:[Modality.AUDIO],
+                    systemInstruction: construirePrompt(),
+                    inputAudioTranscription:{},
+                    outputAudioTranscription:{},
+                    speechConfig:{ languageCode: LIVE_LANG, voiceConfig:{ prebuiltVoiceConfig:{ voiceName: voixChoisie() } } },
+                },
+            });
+
+            try { if(outCtx.state === 'suspended') await outCtx.resume(); } catch(e){}
+
+            if(micStream){
+                inCtx = new (window.AudioContext||window.webkitAudioContext)({ sampleRate: 16000 });
+                if(inCtx.state === 'suspended') await inCtx.resume();
+                const src = inCtx.createMediaStreamSource(micStream);
+                procNode = inCtx.createScriptProcessor(4096,1,1);
+                muteNode = inCtx.createGain(); muteNode.gain.value = 0;
+                src.connect(procNode); procNode.connect(muteNode); muteNode.connect(inCtx.destination);
+                procNode.onaudioprocess = (ev) => {
+                    if(!session || !micOuvert) return;      // ← le verrou : rien ne part sans appui
+                    const input = ev.inputBuffer.getChannelData(0);
+                    let s = 0; for(let i=0;i<input.length;i+=8){ s += input[i]*input[i]; }
+                    setMicLevel(Math.min(1, Math.sqrt(s/(input.length/8))*5));
+                    try { session.sendRealtimeInput({ audio:{ data: bufToB64(f32To16(input)), mimeType:'audio/pcm;rate=16000' } }); } catch(e){}
+                };
+            }
+
+            enSeance = true;
+            debutSeance = Date.now();
+            $('chrono').classList.remove('hidden');
+            chronoId = setInterval(chrono, 1000); chrono();
+            rafId = requestAnimationFrame(boucle);
+            $('btn-parler').disabled = !micStream;
+            if(micStream){
+                if(mode === 'libre') micOuvert = true;   // en libre, on écoute dès la connexion
+                majBouton();
+            } else {
+                $('txt-parler').innerText = "Micro indisponible — utilise le clavier";
+                lucide.createIcons();
+            }
+            track('seance_demarree', { personnage: PERSO.id, niveau: NIVEAU.id, voix: voixChoisie(), mode });
+        } catch(err){
+            console.error(err);
+            probleme("La rencontre n'a pas pu commencer",
+                `<p>La connexion n'a pas abouti. C'est souvent passager — recharge la page et relance.</p>`,
+                tech((err && err.message) || String(err)), [{ label:'Recharger la page', onClick:()=>location.reload() }]);
+            soustitre("", true);
+        }
+    }
+
+    function recevoir(msg){
+        try {
+            const sc = msg.serverContent;
+            if(!sc) return;
+            if(sc.modelTurn && sc.modelTurn.parts){
+                for(const p of sc.modelTurn.parts){ if(p.inlineData && p.inlineData.data) jouer(p.inlineData.data); }
+            }
+            if(sc.inputTranscription && sc.inputTranscription.text){
+                curNous += sc.inputTranscription.text;
+                $('question-vive').innerText = '« ' + curNous.trim() + ' »';
+            }
+            if(sc.outputTranscription && sc.outputTranscription.text){
+                curEux += sc.outputTranscription.text;
+                soustitre(curEux.trim(), false);
+            }
+            if(sc.interrupted) arreterLecture();
+            if(sc.turnComplete) cloturer();
+        } catch(e){ console.warn('recevoir', e); }
+    }
+    function cloturer(){
+        const n = curNous.trim(), e = curEux.trim();
+        if(n){ fil.push('CLASSE : "' + n + '"'); journal('nous', n); }
+        if(e){ fil.push(PERSO.nom.split(',')[0].toUpperCase() + ' : "' + e + '"'); journal('eux', e); }
+        curNous = ''; curEux = '';
+        $('question-vive').innerText = '';
+    }
+
+    function jouer(b64){
+        try {
+            if(!outCtx || outCtx.state === 'closed') return;
+            if(outCtx.state === 'suspended') outCtx.resume().catch(()=>{});
+            const buf = b64ToBuf(b64), view = new DataView(buf), n = Math.floor(buf.byteLength/2);
+            const f = new Float32Array(n);
+            for(let i=0;i<n;i++) f[i] = view.getInt16(i*2, true)/0x8000;
+            const ab = outCtx.createBuffer(1, n, 24000); ab.getChannelData(0).set(f);
+            const s = outCtx.createBufferSource(); s.buffer = ab;
+            if(analyser) s.connect(analyser); else s.connect(outCtx.destination);
+            const now = outCtx.currentTime; if(playHead < now) playHead = now;
+            s.start(playHead); playHead += ab.duration;
+            sources.push(s);
+            s.onended = () => { sources = sources.filter(x => x !== s); if(!sources.length) setLevel(0); };
+        } catch(e){ console.warn('jouer', e); }
+    }
+    function arreterLecture(){ sources.forEach(s => { try{ s.stop(); }catch(e){} }); sources = []; playHead = 0; setLevel(0); }
+
+    function arreter(){
+        enSeance = false; fermerMicro();
+        if(chronoId){ clearInterval(chronoId); chronoId = null; }
+        if(rafId){ cancelAnimationFrame(rafId); rafId = null; }
+        setLevel(0); setMicLevel(0);
+        $('chrono').classList.add('hidden');
+        $('btn-parler').disabled = true;
+        try { if(procNode) procNode.disconnect(); } catch(e){}
+        try { if(muteNode) muteNode.disconnect(); } catch(e){}
+        try { if(micStream) micStream.getTracks().forEach(t => t.stop()); } catch(e){}
+        try { if(inCtx) inCtx.close(); } catch(e){}
+        arreterLecture();
+        try { if(outCtx) outCtx.close(); } catch(e){}
+        try { if(session) session.close(); } catch(e){}
+        session=null; micStream=null; inCtx=null; procNode=null; muteNode=null; outCtx=null; analyser=null;
+    }
+
+    // ---------- fiche de séance ----------
+    window.fermerFiche = () => { $('modal').classList.remove('on'); };
+    window.imprimerFiche = () => { window.print(); };
+    window.rejouer = () => { window.fermerFiche(); window.choisirNiveau(NIVEAU.id); };
+
+    window.terminer = async () => {
+        cloturer();
+        const duree = debutSeance ? Math.round((Date.now()-debutSeance)/1000) : 0;
+        const stats = { personnage: PERSO.id, niveau: NIVEAU.id, duree_s: duree, echanges: fil.length };
+        arreter();
+        soustitre("Séance terminée.", true);
+
+        if(!fil.length){
+            track('seance_terminee', Object.assign({ resultat:'sans_echange' }, stats));
+            probleme("Rien à mettre dans la fiche",
+                `<p>Aucune question n'a été posée pendant cette séance.</p>`, '', [{ label:"Revenir à l'accueil", onClick:()=>window.retourAccueil() }]);
+            return;
+        }
+
+        $('modal').classList.add('on');
+        $('fiche-titre').innerText = "Fiche de séance";
+        $('fiche-resume').innerText = "Analyse de l'échange…";
+        $('fiche').innerHTML = '<div class="spinner"></div>';
+
+        const prompt = remplir(FICHE_PROMPT, {
+            PERSONNAGE: PERSO.nom, LIEU: PERSO.lieu, NIVEAU: NIVEAU.label + ' (' + NIVEAU.tranche + ')',
+            NOM_MAJ: PERSO.nom.split(',')[0].toUpperCase(), TRANSCRIPTION: fil.join('\n'),
+        });
+
+        try {
+            const r = await fetch('/api/debrief', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ prompt }) });
+            if(!r.ok) throw new Error('fiche '+r.status);
+            const d = await r.json();
+            track('seance_terminee', Object.assign({ resultat:'fiche', a_verifier:(d.verifier||[]).length }, stats));
+            afficherFiche(d, duree);
+        } catch(e){
+            console.error(e);
+            track('seance_terminee', Object.assign({ resultat:'erreur_fiche' }, stats));
+            afficherFiche({ titre:"Fiche indisponible",
+                resume:"La fiche n'a pas pu être générée. Le fil de la séance reste affiché derrière cette fenêtre.",
+                questions:[], notions:[], verifier:[], prolonger:[] }, duree);
+        }
+    };
+
+    function afficherFiche(d, duree){
+        $('modal').classList.add('on');
+        $('fiche-titre').innerText = d.titre || "Fiche de séance";
+        $('fiche-resume').innerText = d.resume || '';
+        const min = Math.max(1, Math.round(duree/60));
+        let h = `<div class="sec"><h4><i data-lucide="info" style="width:13px;height:13px"></i> Séance</h4>
+            <p>${esc(PERSO.nom)} — ${esc(PERSO.lieu)}<br>Niveau : ${esc(NIVEAU.label)} · Durée : ${min} min · ${fil.length} prises de parole</p></div>`;
+
+        if(d.questions && d.questions.length){
+            h += `<div class="sec"><h4><i data-lucide="help-circle" style="width:13px;height:13px"></i> Questions posées par la classe</h4>
+                <ul>${d.questions.map(q=>`<li>${esc(q)}</li>`).join('')}</ul></div>`;
+        }
+        if(d.notions && d.notions.length){
+            h += `<div class="sec"><h4><i data-lucide="book-open" style="width:13px;height:13px"></i> Notions abordées</h4>
+                <ul>${d.notions.map(n=>`<li>${esc(n)}</li>`).join('')}</ul></div>`;
+        }
+        if(d.verifier && d.verifier.length){
+            h += `<div class="sec alerte"><h4><i data-lucide="alert-triangle" style="width:13px;height:13px"></i> À vérifier avant d'en refaire un cours</h4>` +
+                d.verifier.map(v=>`<div class="verif"><div class="dit">« ${esc(v.dit)} »</div><div class="note">${esc(v.note)}</div></div>`).join('') + `</div>`;
+        } else {
+            h += `<div class="sec"><h4><i data-lucide="check-circle-2" style="width:13px;height:13px"></i> Vérification</h4>
+                <p>Rien de manifestement inexact n'a été relevé dans les propos du témoin. Cela ne vaut pas validation historique : le personnage est joué par une IA et peut se tromper avec aplomb.</p></div>`;
+        }
+        if(d.prolonger && d.prolonger.length){
+            h += `<div class="sec"><h4><i data-lucide="footprints" style="width:13px;height:13px"></i> Pour prolonger en classe</h4>
+                <ul>${d.prolonger.map(p=>`<li>${esc(p)}</li>`).join('')}</ul></div>`;
+        }
+        h += `<div class="acts">
+                <button class="btn btn-p" onclick="imprimerFiche()">Imprimer la fiche</button>
+                <button class="btn btn-s" onclick="rejouer()">Nouvelle séance</button>
+              </div>
+              <button class="linkbtn" onclick="fermerFiche()">Fermer</button>`;
+        $('fiche').innerHTML = h;
+        lucide.createIcons();
+    }
+
+    // ---------- démarrage ----------
+    $('grille-perso').innerHTML = PERSONNAGES.map(cartePerso).join('');
+    window.retourAccueil();
+    lucide.createIcons();
+
+    window.__prompt = () => construirePrompt();
+});
+</script>
+</body>
+</html>

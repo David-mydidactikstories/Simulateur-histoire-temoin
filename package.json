@@ -1,0 +1,15 @@
+{
+  "name": "temoin",
+  "version": "1.0.0",
+  "description": "Témoin — rencontres vocales avec le passé",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@google/genai": "^1.0.0"
+  }
+}
