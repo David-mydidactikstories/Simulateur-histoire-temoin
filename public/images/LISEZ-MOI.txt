@@ -1,0 +1,23 @@
+Dépose ici les portraits des témoins (Jehan, Léonard de Vinci...).
+
+Noms de fichiers suggérés (déjà prévus en commentaire dans index.html) :
+- vinci.jpg   -> pour Léonard de Vinci
+- jehan.jpg   -> pour Jehan
+
+Formats acceptés : .jpg, .jpeg, .png ou .svg (peu importe, du moment que
+l'extension correspond au fichier).
+
+Une fois le fichier déposé ici, ouvre index.html (dans public/) et modifie
+la ligne du témoin concerné :
+    image:null,
+en :
+    image:'images/vinci.jpg',
+
+(en remplaçant vinci.jpg par le nom réel de ton fichier). Fais-le dans les
+DEUX copies : "003. Simulateur histoire/public/index.html" ET
+"006. Simulateur 4 experiences/public/histoire/index.html" — ce sont deux
+fichiers séparés, il faut répéter le changement dans les deux (ou demander
+à Claude de le faire).
+
+Tu peux aussi supprimer ce fichier LISEZ-MOI.txt une fois que tu n'en as
+plus besoin, il ne sert à rien pour l'application elle-même.

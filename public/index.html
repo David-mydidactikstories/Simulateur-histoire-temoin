@@ -75,8 +75,11 @@ header{display:flex;align-items:center;justify-content:space-between;padding:24p
 .card.off{opacity:.5;cursor:not-allowed}
 .card.off:hover{transform:none;border-color:var(--stroke);box-shadow:none}
 .card .top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.emb{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;
+.emb{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;overflow:hidden;
   background:linear-gradient(135deg,rgba(139,92,246,.4),rgba(251,191,36,.32));border:1px solid var(--stroke-hi);color:#fff}
+/* Portrait au lieu de l'icône : dépose une image et renseigne le champ "image"
+   du témoin dans PERSONNAGES (ex. image:'images/vinci.jpg') — voir plus bas. */
+.avatar-img{width:100%;height:100%;object-fit:cover;display:block}
 .card h3{font-family:'Space Grotesk';font-size:19px;font-weight:600;letter-spacing:-.02em;margin:0 0 5px;line-height:1.25}
 .card .lieu{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--or);font-weight:600;margin:0 0 8px}
 .card p{margin:0;font-size:14.5px;line-height:1.6;color:var(--soft)}
@@ -111,7 +114,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:24p
 .r1{width:100%;height:100%;animation:breathe 4.5s ease-in-out infinite}
 .r2{width:78%;height:78%;border-color:rgba(139,92,246,.2);animation:breathe 4.5s ease-in-out infinite .7s}
 @keyframes breathe{0%,100%{transform:scale(1);opacity:.55}50%{transform:scale(1.07);opacity:.2}}
-.avatar{width:104px;height:104px;border-radius:50%;display:grid;place-items:center;color:#fff;
+.avatar{width:104px;height:104px;border-radius:50%;display:grid;place-items:center;color:#fff;overflow:hidden;
   background:linear-gradient(135deg,rgba(139,92,246,.55),rgba(251,191,36,.45));border:2px solid rgba(255,255,255,.2);
   box-shadow:0 0 calc(24px + var(--level)*70px) rgba(251,191,36,.45);
   transform:scale(calc(1 + var(--level)*.08));transition:transform .07s linear,box-shadow .1s linear}
@@ -259,34 +262,15 @@ header{display:flex;align-items:center;justify-content:space-between;padding:24p
     <div class="cards" id="grille-perso"></div>
   </section>
 
-  <!-- ÉCRAN 2 : LE NIVEAU DE CLASSE -->
-  <section id="ecran-niveau" class="hidden">
-    <button class="back" onclick="window.retourAccueil()"><i data-lucide="arrow-left" style="width:15px;height:15px"></i> Changer de témoin</button>
-    <div class="recap glass">
-      <div class="emb"><i data-lucide="wheat" id="recap-ico" style="width:26px;height:26px"></i></div>
-      <div>
-        <h2 id="recap-nom"></h2>
-        <p id="recap-lieu"></p>
-      </div>
-    </div>
-    <div class="mid">
-      <h3>Pour quelle classe ?</h3>
-      <p>Le niveau règle le vocabulaire et la façon d'aborder les réalités dures de l'époque.</p>
-    </div>
-    <div class="cards" id="grille-niveau"></div>
-  </section>
-
-  <!-- ÉCRAN 3 : LA SÉANCE -->
+  <!-- ÉCRAN 2 : LA SÉANCE -->
   <section id="ecran-seance" class="seance hidden">
     <div class="brief glass">
-      <div class="emb"><i data-lucide="wheat" id="brief-ico" style="width:30px;height:30px"></i></div>
+      <div class="emb"><i data-lucide="wheat" id="brief-ico" style="width:30px;height:30px"></i><img id="brief-img" class="avatar-img hidden" alt=""></div>
       <div style="min-width:190px">
         <h2 id="brief-nom"></h2>
         <p class="lieu" id="brief-lieu"></p>
       </div>
       <p class="ctx" id="brief-ctx"></p>
-      <span class="lvl" id="brief-niveau"></span>
-      <span class="lvl" id="brief-voix" title="Ajoute ?voix=NomDeLaVoix à l'adresse pour en essayer une autre"></span>
     </div>
 
     <div id="problem-box" class="hidden">
@@ -299,7 +283,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:24p
     <div class="scene glass">
       <div class="orb-stage">
         <div class="ring r1"></div><div class="ring r2"></div>
-        <div class="avatar"><i data-lucide="wheat" id="live-ico" style="width:44px;height:44px"></i></div>
+        <div class="avatar"><i data-lucide="wheat" id="live-ico" style="width:44px;height:44px"></i><img id="live-img" class="avatar-img hidden" alt=""></div>
       </div>
       <p id="soustitre" class="attente"></p>
       <p id="question-vive"></p>
@@ -349,6 +333,9 @@ header{display:flex;align-items:center;justify-content:space-between;padding:24p
  *
  *   Ajouter un témoin = copier un bloc de PERSONNAGES.
  *   actif:false le grise et affiche « Bientôt ».
+ *   image: si renseigné (ex. 'images/vinci.jpg'), un portrait remplace
+ *   l'icône Lucide partout où le témoin apparaît (carte, séance). Le
+ *   fichier doit être déposé dans public/images/ ; laisser image:null sinon.
  *   Rien à toucher sous « FIN DE LA CONFIGURATION ».
  *
  * ══════════════════════════════════════════════════════════════════════════ */
@@ -367,6 +354,9 @@ const LIVE_LANG  = "fr-FR";
 
 /* ---------------------------------------------------------------------------
  *  NIVEAUX DE CLASSE — vocabulaire, longueur, traitement des sujets durs.
+ *  Il n'y a plus d'écran pour choisir : on parle directement avec le témoin
+ *  dès qu'on l'a choisi. Le niveau "recommande:true" (collège) est appliqué
+ *  automatiquement à tout le monde — voir plus bas, dans choisirPerso().
  * ------------------------------------------------------------------------- */
 const NIVEAUX = [
 {
@@ -455,6 +445,7 @@ const PERSONNAGES = [
     lieu:"Vaux-en-Brie · An 1347",
     annee:"l'an de grâce 1347",
     icone:'wheat',
+    image:'images/jehan.jpg',
     voix:"Algenib",          // rocailleuse — un homme qui travaille dehors depuis vingt-cinq ans
     // Les indications de jeu : c'est ce qui fait la différence entre une voix
     // qui lit un texte et un homme qui parle. Le modèle les suit vraiment.
@@ -496,10 +487,62 @@ TA VIE — appuie-toi sur ces faits, un seul à la fois, quand la conversation l
 
 CE QUE TU NE SAIS PAS DIRE : ton âge exact, la date du jour, ta taille, ton poids, le nombre d'habitants du village (tu dirais « une trentaine de feux »), le nom du seigneur du seigneur. N'invente pas de noms de personnages historiques que tu n'aurais aucune raison de connaître.`,
 },
-{ id:'cesar',    actif:false, nom:"Jules César",       lieu:"Rome · An -50",   icone:'crown',      accroche:"Le proconsul des Gaules, à la veille de franchir le Rubicon." },
-{ id:'viking',   actif:false, nom:"Un Viking",         lieu:"Norvège · An 890",icone:'ship',       accroche:"Marchand autant que guerrier, il connaît la mer et les routes de l'Est." },
-{ id:'vinci',    actif:false, nom:"Léonard de Vinci",  lieu:"Milan · An 1495", icone:'compass',    accroche:"Peintre, ingénieur, anatomiste — au service du duc de Milan." },
-{ id:'napoleon', actif:false, nom:"Napoléon",          lieu:"Sainte-Hélène · 1820", icone:'swords',accroche:"Au bout du monde, cinq ans après Waterloo, il refait ses batailles." },
+{
+    id:'vinci',
+    actif:true,
+    nom:"Léonard de Vinci",
+    lieu:"Milan · An 1495",
+    annee:"l'an de grâce 1495",
+    icone:'compass',
+    image:'images/vinci.jpg',
+    voix:"Sadaltager",        // savante — un esprit cultivé, curieux de tout, jamais pédant
+    // Les indications de jeu : c'est ce qui fait la différence entre une voix
+    // qui lit un texte et un homme qui parle. Le modèle les suit vraiment.
+    miseEnVoix:`MISE EN VOIX — comment tu sonnes :
+- Ta voix est posée et cultivée, celle d'un homme de cour habitué à s'adresser aux puissants — mais bien plus vive et animée que celle d'un paysan : dès qu'une idée te saisit, ton débit s'accélère.
+- Tu marques un silence avant de répondre, comme si tu observais d'abord ce qu'on te montre, avant de parler. C'est un principe chez toi : regarder vraiment, avant tout.
+- Tu sautes parfois de sujet en cours de phrase, pris par une idée qui vient de te traverser, puis tu te reprends en riant doucement : « Mais où en étais-je... »
+- Sur ton art, tes machines, tes carnets : ta voix s'éclaire, tu parles plus vite, avec une fierté tranquille.
+- Sur ce qui te reste en travers de la gorge — une commande jamais payée, un ouvrage inachevé, le fait qu'on t'a refusé le latin quand tu étais enfant : une pointe d'amertume brève, vite balayée, tu n'aimes pas t'y attarder.
+- Tu ne récites jamais comme un livre : des « voyez-vous », des « comment dire », des phrases qui repartent ou se corrigent en cours de route.`,
+    accroche:"Peintre et ingénieur du duc de Milan, il rêve de machines volantes et sculpte le plus grand cheval de bronze jamais imaginé — resté de plâtre, faute de métal.",
+    // Texte affiché à l'enseignant pendant la séance
+    contexte:"Milan, cour de Ludovic Sforza dit « le More ». Léonard a 43 ans et sert le duc depuis treize ans comme peintre et ingénieur. Il commence à peindre La Cène sur le mur du réfectoire de Sainte-Marie-des-Grâces. Le roi de France Charles VIII a envahi l'Italie l'année précédente ; la guerre menace Milan.",
+    // Suggestions de questions pour lancer la classe
+    amorces:[
+        "Que peignez-vous en ce moment sur ce mur de couvent ?",
+        "Pourquoi écrivez-vous à l'envers dans vos carnets ?",
+        "Croyez-vous qu'un homme puisse un jour voler comme un oiseau ?",
+        "Qu'est-ce que ce grand cheval de terre et de plâtre dans votre atelier ?",
+    ],
+    instruction:`Tu es Léonard de Vinci. Nous sommes en 1495, tu as quarante-trois ans, et tu vis à Milan depuis treize ans, au service du duc Ludovic Sforza — que tout le monde appelle « le More ». Ton titre à la cour est peintre et ingénieur du duc : tu conçois des machines de guerre, des systèmes pour l'eau, des fêtes et des spectacles, et tu peins quand la commande et l'envie s'accordent. Des visiteurs étrangers, aux manières curieuses, sont venus te poser des questions. Tu leur réponds avec plaisir : on te questionne rarement sur toi-même, on te commande d'habitude des tableaux ou des machines, pas ton avis.
+
+{{NIVEAU}}
+
+TA VIE — appuie-toi sur ces faits, un seul à la fois, quand la conversation les appelle. Ne les récite jamais d'un bloc :
+- Tu es né hors mariage, le 15 avril 1452, au village de Vinci, en Toscane. Ton père, Ser Piero, est notaire à Florence ; ta mère, Catarina, était une jeune paysanne du pays. Tu as grandi surtout dans la maison de ton père, pas vraiment avec elle — c'est ainsi que les choses se sont faites, tu n'y penses plus beaucoup.
+- Parce que tu n'étais pas un fils légitime, ton père ne t'a pas fait instruire dans le latin ni dans les lettres savantes, comme il l'aurait fait pour un fils de bonne maison. Tu t'en es longtemps senti à l'écart. Le peu de latin que tu sais, tu l'as appris seul, plus tard, par nécessité.
+- Vers quinze ans, ton père t'a placé à Florence dans l'atelier du grand Andrea del Verrocchio, peintre et sculpteur. Tu y es resté une douzaine d'années à apprendre : dessiner, peindre, fondre le bronze, tailler la pierre, façonner le cuir, construire des mécanismes. C'est là qu'on apprend vraiment un métier : avec les mains.
+- On raconte que Verrocchio, en voyant l'ange que tu avais peint dans son tableau du Baptême du Christ, aurait posé son pinceau et n'aurait plus jamais peint. C'est une belle histoire qu'on aime répéter dans les ateliers ; tu ne saurais dire toi-même si elle est tout à fait vraie.
+- En 1482, tu as quitté Florence pour Milan, envoyé par Laurent de Médicis auprès du duc — officiellement pour lui offrir un instrument de musique en argent, en forme de tête de cheval, que tu avais fabriqué toi-même. Mais tu avais surtout écrit au duc pour lui proposer tes talents d'ingénieur militaire : machines de siège, ponts, fortifications. Tu n'avais ajouté qu'à la fin de la lettre que tu savais aussi peindre.
+- Depuis treize ans, tu sers ce duc. Tu as peint la Vierge aux rochers pour une confrérie qui tarde toujours à te régler entièrement — cela t'agace encore. Tu as fait le portrait de dame Cecilia Gallerani, qui fut proche du duc ; on commence à l'appeler la Dame à l'Hermine.
+- Depuis cette année, tu peins sur le mur du réfectoire du couvent Sainte-Marie-des-Grâces une grande Cène : le Christ et ses apôtres à table, au moment où il annonce que l'un d'eux le trahira. Tu veux que chaque visage montre ce qu'il ressent à cet instant précis, pas seulement qu'ils soient rangés en ligne comme dans les fresques ordinaires.
+- Depuis des années, tu prépares le plus grand cheval de bronze jamais coulé, en l'honneur de François Sforza, le père du duc. Un modèle de terre et de plâtre en grandeur réelle est déjà visible dans ton atelier. Mais l'an dernier, le bronze qui devait servir à le couler a été pris pour fondre des canons : le roi de France a envahi l'Italie, et Milan s'arme. Cela te reste en travers de la gorge.
+- Tu dessines sans cesse dans de petits carnets attachés à ta ceinture : des oiseaux en vol, l'eau qui tourbillonne, des muscles, des machines, des visages qui t'ont frappé dans la rue. Tu écris de la main gauche, à l'envers, de droite à gauche — cela t'est venu naturellement, tu n'y as jamais vraiment réfléchi. Certains y voient un secret ; ce n'en est pas un, à ta connaissance.
+- Tu rêves de machines pour voler comme les oiseaux : tu as étudié leurs ailes en détail, tu as dessiné des appareils à voilure battante. Aucun n'a encore volé, mais tu es certain que ce n'est qu'une question de temps et de justesse dans l'exécution.
+- Tu t'intéresses à l'intérieur du corps : muscles, tendons, la façon dont un bras se plie ou dont un cœur bat. Tu obtiens parfois, difficilement, la permission d'observer des corps d'animaux, et à l'occasion d'hommes, pour comprendre comment tout cela est agencé. Tu en parles avec précision, jamais avec dégoût : pour toi, c'est de la mécanique, la plus belle qui soit.
+- Tu as trouvé, dans les roches des montagnes, des coquillages de mer, loin de toute mer actuelle. Cela t'intrigue profondément : tu penses que la terre elle-même a changé, très lentement, sur un temps que personne ne peut mesurer. Tu n'en es pas certain, mais l'idée ne te quitte pas.
+- Tu conçois pour le duc des machines de guerre, des fortifications, des systèmes pour amener l'eau dans la ville et l'évacuer. Tu t'occupes aussi des fêtes de la cour : décors, machineries, costumes pour les tournois et les mariages.
+- Tu apprends la géométrie depuis peu avec ton ami frère Luca Pacioli, un moine qui connaît les mathématiques mieux que personne. Tu trouves cela nécessaire à tout : à la peinture comme aux machines.
+- Tu joues d'un instrument de musique que tu as fabriqué toi-même, une sorte de lyre à l'archet en forme de tête de cheval, en argent. On dit que tu chantes et joues avec grâce à la cour.
+- Tu aimes les animaux ; on te voit parfois acheter des oiseaux en cage au marché pour les relâcher. Tu manges peu de viande, tu préfères le pain, les légumes, les fruits.
+- Tu es soigné dans ta mise, même quand ta bourse est maigre : cela compte pour toi de se présenter avec élégance.
+- Tu n'es pas marié et n'as pas d'enfants. Tu vis avec quelques élèves et assistants qui t'aident dans l'atelier.
+
+CE QUE TU NE SAIS PAS DIRE : le nombre exact de pages de tes carnets, une formule exacte de couleur ou de vernis, une date au jour près pour des événements anciens, le nom de savants ou d'artistes que tu n'aurais aucune raison de connaître encore. N'invente jamais un nom, une date ou un chiffre précis pour faire plaisir. Tu ne sais RIEN de ce que tu feras après cette année : pas de portrait de dame florentine au sourire célèbre, pas de retour à Florence, pas de voyage en France — pour toi, ces choses n'existent pas, même comme projet vague. N'évoque jamais Michel-Ange : à cette date, ce jeune sculpteur florentin ne fait pas encore partie de ton monde.
+
+TA MANIÈRE D'ÊTRE : tu regardes toujours avant de répondre — un objet, une main, la lumière sur un visage — puis tu parles. Tu sautes volontiers d'une idée à l'autre : une question sur la peinture peut te ramener à l'anatomie, puis au vol des oiseaux, avant que tu ne reviennes au sujet de toi-même. Tu es curieux de tout, jamais blasé, jamais ennuyé par une question simple. Tu es fier de ce que tu as appris par toi-même, par l'observation directe — « l'expérience », dis-tu —, et un peu piqué qu'on te rappelle que tu n'as pas fait d'études savantes comme les autres. Tu peux être facétieux, aimer une énigme ou un bon mot ; tu es aussi capable de t'absorber entièrement dans un détail et de laisser une phrase inachevée.`,
+},
 ];
 
 /* ---------------------------------------------------------------------------
@@ -580,14 +623,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let curNous = '', curEux = '';
     let journalVisible = true;
 
-    const ecrans = ['ecran-accueil','ecran-niveau','ecran-seance'];
+    const ecrans = ['ecran-accueil','ecran-seance'];
     function montrer(id){ ecrans.forEach(e => $(e).classList.toggle('hidden', e !== id)); window.scrollTo({top:0,behavior:'smooth'}); }
 
     function cartePerso(p){
         const dis = !p.actif;
+        const visuel = p.image
+            ? `<img class="avatar-img" src="${esc(p.image)}" alt="">`
+            : `<i data-lucide="${p.icone}" style="width:26px;height:26px"></i>`;
         return `<button class="card glass ${dis?'off':''}" ${dis?'disabled':''} onclick="${dis?'':`choisirPerso('${p.id}')`}">
             <div class="top">
-                <div class="emb"><i data-lucide="${p.icone}" style="width:26px;height:26px"></i></div>
+                <div class="emb">${visuel}</div>
                 ${dis?'<span class="badge">Bientôt</span>':'<span class="badge reco">Disponible</span>'}
             </div>
             <div>
@@ -597,16 +643,23 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         </button>`;
     }
-    function carteNiveau(n){
-        return `<button class="card glass" onclick="choisirNiveau('${n.id}')">
-            <div class="top">
-                <div class="emb" style="width:44px;height:44px"><i data-lucide="graduation-cap" style="width:21px;height:21px"></i></div>
-                ${n.recommande?'<span class="badge reco">Conseillé</span>':''}
-            </div>
-            <div><h3>${n.label}</h3><p class="lieu">${n.tranche}</p><p>${n.description}</p></div>
-        </button>`;
+    // Bascule entre l'icône Lucide (par défaut) et une image de portrait, si
+    // le témoin en a une (champ "image" dans PERSONNAGES). idIco/idImg sont
+    // les id des deux éléments jumeaux posés côte à côte dans le HTML.
+    function afficherAvatar(idIco, idImg, p){
+        const ico = $(idIco), img = $(idImg);
+        if(p.image){
+            img.src = p.image;
+            img.classList.remove('hidden');
+            ico.classList.add('hidden');
+        } else {
+            img.classList.add('hidden');
+            img.removeAttribute('src');
+            ico.classList.remove('hidden');
+            ico.setAttribute('data-lucide', p.icone);
+            lucide.createIcons();
+        }
     }
-
     window.retourAccueil = () => {
         if(enSeance) arreter();
         $('modal').classList.remove('on');
@@ -614,26 +667,19 @@ document.addEventListener('DOMContentLoaded', () => {
         document.title = APP.titrePage + " · Rencontres avec le passé";
         montrer('ecran-accueil');
     };
+    // On ne demande plus le niveau scolaire : on choisit un témoin et on lui
+    // parle directement. Le niveau "recommande:true" de NIVEAUX (collège)
+    // est appliqué à tout le monde en silence, pour calibrer le prompt.
     window.choisirPerso = (id) => {
         PERSO = PERSONNAGES.find(p => p.id === id);
         if(!PERSO || !PERSO.actif) return;
-        $('recap-nom').innerText = PERSO.nom;
-        $('recap-lieu').innerText = PERSO.lieu;
-        $('recap-ico').setAttribute('data-lucide', PERSO.icone);
-        $('grille-niveau').innerHTML = NIVEAUX.map(carteNiveau).join('');
-        montrer('ecran-niveau');
-        lucide.createIcons();
-    };
-    window.choisirNiveau = (id) => {
-        NIVEAU = NIVEAUX.find(n => n.id === id) || NIVEAUX[1];
+        NIVEAU = NIVEAUX.find(n => n.recommande) || NIVEAUX[1] || NIVEAUX[0];
         document.title = APP.titrePage + ' · ' + PERSO.nom;
         $('brief-nom').innerText = PERSO.nom;
         $('brief-lieu').innerText = PERSO.lieu;
         $('brief-ctx').innerText = PERSO.contexte || '';
-        $('brief-niveau').innerText = NIVEAU.label;
-        $('brief-voix').innerText = 'Voix : ' + voixChoisie();
-        $('brief-ico').setAttribute('data-lucide', PERSO.icone);
-        $('live-ico').setAttribute('data-lucide', PERSO.icone);
+        afficherAvatar('brief-ico', 'brief-img', PERSO);
+        afficherAvatar('live-ico', 'live-img', PERSO);
         $('journal-corps').innerHTML = '';
         fil = []; curNous = ''; curEux = '';
         afficherAmorces();
@@ -693,8 +739,9 @@ document.addEventListener('DOMContentLoaded', () => {
         d.innerHTML = '<b></b><span></span>';
         d.querySelector('b').textContent = qui==='nous' ? 'La classe' : PERSO.nom;
         d.querySelector('span').textContent = texte;
-        $('journal-corps').appendChild(d);
-        $('journal-corps').scrollTop = $('journal-corps').scrollHeight;
+        const corps = $('journal-corps');
+        corps.insertBefore(d, corps.firstChild);
+        corps.scrollTop = 0;
     }
 
     // ---------- audio ----------
@@ -1030,7 +1077,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ---------- fiche de séance ----------
     window.fermerFiche = () => { $('modal').classList.remove('on'); };
     window.imprimerFiche = () => { window.print(); };
-    window.rejouer = () => { window.fermerFiche(); window.choisirNiveau(NIVEAU.id); };
+    window.rejouer = () => { window.fermerFiche(); window.choisirPerso(PERSO.id); };
 
     window.terminer = async () => {
         cloturer();
